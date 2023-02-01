@@ -13,6 +13,21 @@ ApplicationWindow {
 
     header: ToolBar {
         Material.background: "#2da968"
+
+        ToolButton {
+            id: toolButton
+            anchors.left: parent.left
+            text: qsTr("<")
+            onClicked: btConnection.startDeviceDiscovery()
+        }
+
+        ToolButton {
+            id: toolButton2
+            anchors.right: parent.right
+            text: qsTr(">")
+            onClicked: btConnection.stopDeviceDiscovery()
+        }
+
         RowLayout {
             spacing: 20
             anchors.fill: parent

@@ -1,9 +1,11 @@
+#include <QBluetoothDeviceDiscoveryAgent>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QSettings>
-#include <QQuickStyle>
 #include <QIcon>
+
+#include "btconnection.hh"
 
 int main(int argc, char *argv[])
 {
@@ -12,10 +14,15 @@ int main(int argc, char *argv[])
 
     QIcon::setThemeName("Car Monitoring");
 
+    BtConnection bt_connection;
+
     QQmlApplicationEngine engine;
     engine.load(QUrl("qrc:/main.qml"));
     if (engine.rootObjects().isEmpty())
         return -1;
+
+    QQmlContext *root_context = engine.rootContext();
+    root_context->setContextProperty("btConnection", &bt_connection);
 
     return app.exec();
 }
