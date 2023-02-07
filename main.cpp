@@ -17,12 +17,12 @@ int main(int argc, char *argv[])
     BtConnection bt_connection;
 
     QQmlApplicationEngine engine;
+    QQmlContext *root_context = engine.rootContext();
+    root_context->setContextProperty("btConnection", &bt_connection);
+
     engine.load(QUrl("qrc:/main.qml"));
     if (engine.rootObjects().isEmpty())
         return -1;
-
-    QQmlContext *root_context = engine.rootContext();
-    root_context->setContextProperty("btConnection", &bt_connection);
 
     return app.exec();
 }

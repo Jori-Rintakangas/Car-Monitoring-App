@@ -14,20 +14,6 @@ ApplicationWindow {
     header: ToolBar {
         Material.background: "#2da968"
 
-        ToolButton {
-            id: toolButton
-            anchors.left: parent.left
-            text: qsTr("<")
-            onClicked: btConnection.startDeviceDiscovery()
-        }
-
-        ToolButton {
-            id: toolButton2
-            anchors.right: parent.right
-            text: qsTr(">")
-            onClicked: btConnection.stopDeviceDiscovery()
-        }
-
         RowLayout {
             spacing: 20
             anchors.fill: parent
@@ -52,6 +38,24 @@ ApplicationWindow {
             id: pane
             Material.background: "#143455"
 
+            Button {
+                id: btButton
+                text: btConnection.connection_
+                Material.background: "#2da968"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenterOffset: 240
+                onClicked: {
+                    if (btConnection.connection_ === "CONNECT")
+                    {
+                        btConnection.startDeviceDiscovery()
+                    }
+                    else
+                    {
+                        btConnection.disconnectDevice()
+                    }
+                }
+            }
 
             Grid {
                 anchors.horizontalCenter: parent.horizontalCenter
