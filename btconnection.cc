@@ -2,20 +2,13 @@
 
 BtConnection::BtConnection(QObject *parent) : QObject(parent)
 {
-    discoveryAgent_ = new QBluetoothDeviceDiscoveryAgent();
     localDevice_ = new QBluetoothLocalDevice();
-    QBluetoothDeviceDiscoveryAgent::connect(discoveryAgent_, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),
-                                                       this, SLOT(deviceDiscovered(QBluetoothDeviceInfo)));
+    localDevice_->powerOn();
+}
 
-    QBluetoothDeviceDiscoveryAgent::connect(discoveryAgent_, SIGNAL(finished()),
-                                                       this, SLOT(stopDeviceDiscovery()));
-
-    QBluetoothLocalDevice::connect(localDevice_, SIGNAL(deviceConnected(QBluetoothAddress)),
-                                                       this, SLOT(deviceConnected()));
-
-    QBluetoothLocalDevice::connect(localDevice_, SIGNAL(deviceDisconnected(QBluetoothAddress)),
-                                                       this, SLOT(deviceDisconnected()));
-
+BtConnection::~BtConnection()
+{
+    delete socket_;
 }
 
 QString BtConnection::getConnection()
@@ -23,56 +16,61 @@ QString BtConnection::getConnection()
     return connection_;
 }
 
-BtConnection::~BtConnection()
+QString BtConnection::getData()
 {
-    delete discoveryAgent_;
+    return data_;
 }
 
-void BtConnection::startDeviceDiscovery()
+void BtConnection::connectDevice()
 {
-    localDevice_->powerOn();
-    while (localDevice_->hostMode() == QBluetoothLocalDevice::HostPoweredOff)
-    {
-        qDebug() << "Waiting for bluetooth to turn on";
-    }
-    discoveryAgent_->start(QBluetoothDeviceDiscoveryAgent::ClassicMethod);
-    qDebug() << "Started bt device discovery";
-}
+    socket_ = new QBluetoothSocket(QBluetoothServiceInfo::RfcommProtocol);
+    socket_->connectToService(QBluetoothAddress(DEVICE_MAC), QBluetoothUuid(UUID));
 
-void BtConnection::stopDeviceDiscovery()
-{
-    discoveryAgent_->stop();
-    qDebug() << "Stopped bt device discovery";
+    connect(socket_, &QBluetoothSocket::readyRead, this, &BtConnection::readSocket);
+    connect(socket_, &QBluetoothSocket::connected, this, &BtConnection::connected);
+    connect(socket_, &QBluetoothSocket::disconnected, this, &BtConnection::disconnected);
+    connect(socket_, &QBluetoothSocket::errorOccurred, this, &BtConnection::onSocketErrorOccurred);
+    qDebug() << "Created socket";
 }
 
 void BtConnection::disconnectDevice()
 {
-    QBluetoothAddress address(deviceAddress_);
-    localDevice_->requestPairing(address, QBluetoothLocalDevice::Unpaired);
+    socket_->disconnectFromService();
 }
 
-void BtConnection::deviceConnected()
+void BtConnection::readSocket()
+{
+    if (!socket_)
+        return;
+
+    while (socket_->canReadLine()) {
+        QByteArray line = socket_->readLine().trimmed();
+        QString newData = QString::fromUtf8(line.constData(), line.length());
+        qDebug() << newData;
+        if (newData != data_)
+        {
+            data_ = newData;
+            emit dataChanged();
+        }
+    }
+}
+
+void BtConnection::connected()
 {
     qDebug() << "Connected to bt device";
     connection_ = "DISCONNECT";
     emit connectionChanged();
 }
 
-void BtConnection::deviceDisconnected()
+void BtConnection::disconnected()
 {
     qDebug() << "Disconnected from bt device";
     connection_ = "CONNECT";
+    delete socket_;
     emit connectionChanged();
 }
 
-void BtConnection::deviceDiscovered(const QBluetoothDeviceInfo &device)
+void BtConnection::onSocketErrorOccurred(QBluetoothSocket::SocketError)
 {
-    qDebug() << "Found new device:" << device.name() << '(' << device.address().toString() << ')';
-    if (device.address().toString() == deviceAddress_)
-    {
-        stopDeviceDiscovery();
-        QBluetoothAddress address(deviceAddress_);
-        localDevice_->requestPairing(address, QBluetoothLocalDevice::Paired);
-    }
-
+    qDebug() << "Socket error";
 }

@@ -48,7 +48,7 @@ ApplicationWindow {
                 onClicked: {
                     if (btConnection.connection_ === "CONNECT")
                     {
-                        btConnection.startDeviceDiscovery()
+                        btConnection.connectDevice()
                     }
                     else
                     {
@@ -74,7 +74,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                     }
                     Label {
-                        text: "0 KM/H"
+                        text: btConnection.data_ + " KM/H"
                         font.pixelSize: 16
                         font.italic: true
                         font.bold: true

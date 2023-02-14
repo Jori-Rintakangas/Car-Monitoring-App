@@ -1,40 +1,46 @@
 #ifndef BTCONNECTION_HH
 #define BTCONNECTION_HH
 
-
-#include <QBluetoothDeviceInfo>
-#include <QBluetoothDeviceDiscoveryAgent>
 #include <QBluetoothLocalDevice>
-#include <QBluetoothDeviceInfo>
+#include <QBluetoothSocket>
 #include <QDebug>
 #include <QObject>
+
+const QString UUID = "";
+const QString DEVICE_MAC = "";
 
 class BtConnection : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString connection_ READ getConnection NOTIFY connectionChanged)
+    Q_PROPERTY(QString data_ READ getData NOTIFY dataChanged)
 
 public:
     explicit BtConnection(QObject *parent = 0);
-    QString getConnection();
     ~BtConnection();
+    QString getConnection();
+    QString getData();
 
 public slots:
-    void deviceDiscovered(const QBluetoothDeviceInfo&);
-    void startDeviceDiscovery();
-    void stopDeviceDiscovery();
+    void connectDevice();
     void disconnectDevice();
-    void deviceConnected();
-    void deviceDisconnected();
 
 signals:
     void connectionChanged();
+    void dataChanged();
+
+private slots:
+    void readSocket();
+    void connected();
+    void disconnected();
+    void onSocketErrorOccurred(QBluetoothSocket::SocketError);
 
 private:
-    QBluetoothDeviceDiscoveryAgent *discoveryAgent_;
+    QBluetoothLocalDevice *localDevice_ = nullptr;
+    QBluetoothSocket *socket_ = nullptr;
+
     QString connection_ = "CONNECT";
-    QString deviceAddress_ = "44:AF:28:BB:C0:64";
-    QBluetoothLocalDevice *localDevice_;
+    QString data_ = "0";
 };
 
 #endif // BTCONNECTION_HH
