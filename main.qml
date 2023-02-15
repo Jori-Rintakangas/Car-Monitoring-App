@@ -45,6 +45,7 @@ ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 240
+                enabled: !btConnection.connecting_
                 onClicked: {
                     if (btConnection.connection_ === "CONNECT")
                     {
@@ -54,6 +55,13 @@ ApplicationWindow {
                     {
                         btConnection.disconnectDevice()
                     }
+                }
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.bottom
+                    anchors.verticalCenterOffset: 4
+                    text: "connecting..."
+                    visible: btConnection.connecting_
                 }
             }
 
