@@ -65,6 +65,18 @@ ApplicationWindow {
                 }
             }
 
+            Label {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.bottom
+                anchors.verticalCenterOffset: 4
+                text: "Icons from <a href=\"https://icons8.com\">Icons8</a>"
+                font.pixelSize: 10
+                font.italic: true
+                color: "#2da968"
+                linkColor: "#2da968"
+                onLinkActivated: Qt.openUrlExternally("https://icons8.com")
+            }
+
             Grid {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
