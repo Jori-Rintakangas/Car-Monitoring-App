@@ -5,12 +5,11 @@ QT += quick quickcontrols2
 QT += bluetooth
 
 SOURCES += \
-    btconnection.cc \
-    main.cpp
+    src/btconnection.cc \
+    src/main.cpp
 
 RESOURCES += \
     main.qml \
-    qmldir \
     qtquickcontrols2.conf \
     icons/speed.png \
     icons/pedal.png \
@@ -20,6 +19,6 @@ RESOURCES += \
     icons/coolant.png
 
 HEADERS += \
-    btconnection.hh
+    src/btconnection.hh
 
 
