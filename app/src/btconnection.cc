@@ -23,9 +23,34 @@ QString BtConnection::getConnection()
     return connection_;
 }
 
-QString BtConnection::getData()
+QString BtConnection::getSpeed()
 {
-    return data_;
+    return speed_;
+}
+
+QString BtConnection::getRpm()
+{
+    return rpm_;
+}
+
+QString BtConnection::getTemp()
+{
+    return temp_;
+}
+
+QString BtConnection::getLoad()
+{
+    return load_;
+}
+
+QString BtConnection::getMaf()
+{
+    return maf_;
+}
+
+QString BtConnection::getThrottle()
+{
+    return throttle_;
 }
 
 bool BtConnection::getConnecting()
@@ -56,11 +81,37 @@ void BtConnection::readSocket()
     {
         QByteArray line = socket_->readLine().trimmed();
         QString newData = QString::fromUtf8(line.constData(), line.length());
-        qDebug() << newData;
-        if (newData != data_)
+        QChar end = newData.at(line.length() - 1);
+        newData.chop(1);
+        if (end == 'S' && newData != speed_)
         {
-            data_ = newData;
-            emit dataChanged();
+            speed_ = newData;
+            emit speedChanged();
+        }
+        else if (end == 'R' && newData != rpm_)
+        {
+            rpm_ = newData;
+            emit rpmChanged();
+        }
+        else if (end == 'T' && newData != temp_)
+        {
+            temp_ = newData;
+            emit tempChanged();
+        }
+        else if (end == 'L' && newData != load_)
+        {
+            load_ = newData;
+            emit loadChanged();
+        }
+        else if (end == 'M' && newData != maf_)
+        {
+            maf_ = newData;
+            emit mafChanged();
+        }
+        else if (end == 'P' && newData != throttle_)
+        {
+            throttle_ = newData;
+            emit throttleChanged();
         }
     }
 }

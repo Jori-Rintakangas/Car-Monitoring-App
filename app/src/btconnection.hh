@@ -6,21 +6,31 @@
 #include <QDebug>
 #include <QObject>
 
-const QString UUID = "";
-const QString DEVICE_MAC = "";
+const QString UUID = "00001101-0000-1000-8000-00805f9b34fb"; // uuid of SPP protocol
+const QString DEVICE_MAC = ""; // MAC address of ESP32
 
 class BtConnection : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString connection_ READ getConnection NOTIFY connectionChanged)
-    Q_PROPERTY(QString data_ READ getData NOTIFY dataChanged)
+    Q_PROPERTY(QString speed_ READ getSpeed NOTIFY speedChanged)
+    Q_PROPERTY(QString rpm_ READ getRpm NOTIFY rpmChanged)
+    Q_PROPERTY(QString temp_ READ getTemp NOTIFY tempChanged)
+    Q_PROPERTY(QString load_ READ getLoad NOTIFY loadChanged)
+    Q_PROPERTY(QString maf_ READ getMaf NOTIFY mafChanged)
+    Q_PROPERTY(QString throttle_ READ getThrottle NOTIFY throttleChanged)
     Q_PROPERTY(bool connecting_ READ getConnecting NOTIFY connectingChanged)
 
 public:
     explicit BtConnection(QObject *parent = 0);
     ~BtConnection();
     QString getConnection();
-    QString getData();
+    QString getSpeed();
+    QString getRpm();
+    QString getTemp();
+    QString getLoad();
+    QString getMaf();
+    QString getThrottle();
     bool getConnecting();
 
 public slots:
@@ -29,7 +39,12 @@ public slots:
 
 signals:
     void connectionChanged();
-    void dataChanged();
+    void speedChanged();
+    void rpmChanged();
+    void tempChanged();
+    void loadChanged();
+    void mafChanged();
+    void throttleChanged();
     void connectingChanged();
 
 private slots:
@@ -43,7 +58,12 @@ private:
     QBluetoothSocket *socket_ = nullptr;
 
     QString connection_ = "CONNECT";
-    QString data_ = "0";
+    QString speed_ = "0";
+    QString rpm_ = "0";
+    QString temp_ = "0";
+    QString load_ = "0";
+    QString maf_ = "0";
+    QString throttle_ = "0";
     bool connecting_ = false;
 };
 

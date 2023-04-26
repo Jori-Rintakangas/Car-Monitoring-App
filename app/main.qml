@@ -94,7 +94,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                     }
                     Label {
-                        text: btConnection.data_ + " KM/H"
+                        text: btConnection.speed_ + " KM/H"
                         font.pixelSize: 16
                         font.italic: true
                         font.bold: true
@@ -115,7 +115,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                     }
                     Label {
-                        text: "0 RPM"
+                        text: btConnection.rpm_ + " RPM"
                         font.pixelSize: 16
                         font.italic: true
                         font.bold: true
@@ -136,7 +136,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                     }
                     Label {
-                        text: "0 °C"
+                        text: btConnection.temp_ + " °C"
                         font.pixelSize: 16
                         font.italic: true
                         font.bold: true
@@ -157,7 +157,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                     }
                     Label {
-                        text: "0 %"
+                        text: btConnection.load_ + " %"
                         font.pixelSize: 16
                         font.italic: true
                         font.bold: true
@@ -178,7 +178,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                     }
                     Label {
-                        text: "0 g/s"
+                        text: btConnection.maf_ + " g/s"
                         font.pixelSize: 16
                         font.italic: true
                         font.bold: true
@@ -199,7 +199,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                     }
                     Label {
-                        text: "0 %"
+                        text: btConnection.throttle_ + " %"
                         font.pixelSize: 16
                         font.italic: true
                         font.bold: true
