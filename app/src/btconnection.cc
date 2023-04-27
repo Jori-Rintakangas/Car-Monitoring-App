@@ -3,7 +3,6 @@
 BtConnection::BtConnection(QObject *parent) : QObject(parent)
 {
     localDevice_ = new QBluetoothLocalDevice();
-    localDevice_->powerOn();
 
     socket_ = new QBluetoothSocket(QBluetoothServiceInfo::RfcommProtocol);
     connect(socket_, &QBluetoothSocket::readyRead, this, &BtConnection::readSocket);
@@ -60,10 +59,13 @@ bool BtConnection::getConnecting()
 
 void BtConnection::connectDevice()
 {
+    localDevice_->powerOn();
+    if (localDevice_->hostMode() == QBluetoothLocalDevice::HostPoweredOff)
+    {
+        return;
+    }
     connecting_ = true;
     emit connectingChanged();
-    localDevice_->powerOn();
-    while (localDevice_->hostMode() == QBluetoothLocalDevice::HostPoweredOff);
     socket_->connectToService(QBluetoothAddress(DEVICE_MAC), QBluetoothUuid(UUID));
 }
 
