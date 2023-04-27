@@ -16,6 +16,15 @@
 OBD9141 k_line;
 BluetoothSerial serial_bt;
 
+uint16_t maf = 0;
+uint16_t rpm = 0;
+uint8_t speed = 0;
+uint8_t temp = 0;
+uint8_t load = 0;
+uint8_t throttle = 0;
+
+uint8_t new_val = 0;
+
 void setup()
 {
     k_line.begin(Serial2, RX_PIN, TX_PIN);
@@ -33,44 +42,44 @@ void loop()
         while (1)
         {
             delay(200);
-            if (k_line.getCurrentPID(VEHICLE_SPEED, 1))
+            if (k_line.getCurrentPID(VEHICLE_SPEED, 1) && (new_val = k_line.readUint8() != speed))
             {
-                uint8_t speed = k_line.readUint8();
+                speed = new_val;
                 serial_bt.println(String(speed) + 'S');
             }
 
             delay(200);
-            if (k_line.getCurrentPID(ENGINE_RPM, 2))
+            if (k_line.getCurrentPID(ENGINE_RPM, 2) && (new_val = k_line.readUint16() / 4 != rpm))
             {
-                uint16_t rpm = k_line.readUint16() / 4;
+                rpm = new_val;
                 serial_bt.println(String(rpm) + 'R');
             }
 
             delay(200);
-            if (k_line.getCurrentPID(TEMPERATURE, 1))
+            if (k_line.getCurrentPID(TEMPERATURE, 1) && (new_val = k_line.readUint8() - 40 != temp))
             {
-                uint8_t temp = k_line.readUint8() - 40;
+                temp = new_val;
                 serial_bt.println(String(temp) + 'T');
             }
 
             delay(200);
-            if (k_line.getCurrentPID(MASS_AIR_FLOW, 2))
+            if (k_line.getCurrentPID(MASS_AIR_FLOW, 2) && (new_val = k_line.readUint16() / 100 != maf))
             {
-                uint16_t maf = k_line.readUint16() / 100;
+                maf = new_val;
                 serial_bt.println(String(maf) + 'M');
             }
 
             delay(200);
-            if (k_line.getCurrentPID(ENGINE_LOAD, 1))
+            if (k_line.getCurrentPID(ENGINE_LOAD, 1) && (new_val = k_line.readUint8() * 2.55 != load))
             {
-                uint8_t load = k_line.readUint8() * 2.55;
+                load = new_val;
                 serial_bt.println(String(load) + 'L');
             }
 
             delay(200);
-            if (k_line.getCurrentPID(THROTTLE_POS, 1))
+            if (k_line.getCurrentPID(THROTTLE_POS, 1) && (new_val = k_line.readUint8() * 2.55 != throttle))
             {
-                uint16_t throttle = k_line.readUint8() * 2.55;
+                throttle = new_val;
                 serial_bt.println(String(throttle) + 'P');
             }
         }

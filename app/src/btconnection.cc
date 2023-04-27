@@ -83,32 +83,32 @@ void BtConnection::readSocket()
         QString newData = QString::fromUtf8(line.constData(), line.length());
         QChar end = newData.at(line.length() - 1);
         newData.chop(1);
-        if (end == 'S' && newData != speed_)
+        if (end == 'S')
         {
             speed_ = newData;
             emit speedChanged();
         }
-        else if (end == 'R' && newData != rpm_)
+        else if (end == 'R')
         {
             rpm_ = newData;
             emit rpmChanged();
         }
-        else if (end == 'T' && newData != temp_)
+        else if (end == 'T')
         {
             temp_ = newData;
             emit tempChanged();
         }
-        else if (end == 'L' && newData != load_)
+        else if (end == 'L')
         {
             load_ = newData;
             emit loadChanged();
         }
-        else if (end == 'M' && newData != maf_)
+        else if (end == 'M')
         {
             maf_ = newData;
             emit mafChanged();
         }
-        else if (end == 'P' && newData != throttle_)
+        else if (end == 'P')
         {
             throttle_ = newData;
             emit throttleChanged();
