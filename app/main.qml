@@ -14,6 +14,20 @@ ApplicationWindow {
     header: ToolBar {
         Material.background: "#2da968"
 
+        Image {
+            source: "qrc:/icons/car.png"
+            anchors.left: parent.left
+            anchors.leftMargin: 5
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Image {
+            source: btConnection.connection_ === "CONNECT" ? "qrc:/icons/btdisconnected.png" : "qrc:/icons/btconnected.png"
+            anchors.left: parent.left
+            anchors.leftMargin: 25
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
         RowLayout {
             spacing: 20
             anchors.fill: parent

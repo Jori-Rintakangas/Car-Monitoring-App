@@ -16,7 +16,10 @@ RESOURCES += \
     icons/engine.png \
     icons/rpm.png \
     icons/maf.png \
-    icons/coolant.png
+    icons/coolant.png \
+    icons/btconnected.png \
+    icons/btdisconnected.png \
+    icons/car.png
 
 HEADERS += \
     src/btconnection.hh
